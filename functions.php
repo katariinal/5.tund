@@ -54,4 +54,47 @@
         $mysqli->close();
         
     }
+    
+    function createCarPlate($plate, $car_color){
+        
+        $mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+        $stmt = $mysqli->prepare("INSERT INTO car_plates (user_id, number_plate, color) VALUES (?,?,?)");
+        //i - iser_id INT
+        $stmt->bind_param("iss",  $_SESSION['logged_in_user_id'], $plate, $car_color);
+        
+        $message = "";
+        
+        //kuiõnnestub, siis tõene, kui viga, siis else
+        if($stmt->execute()){
+            //õnnestus
+            $message = "edukalt andmebaasi salvestatud!";
+        }
+    
+    
+        
+        $stmt->close();
+        
+        $mysqli->close();
+        //saadan sõnumi tagasi 
+        return $message;
+       
+    }
+    
+    function getAllData(){
+        $mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+        $stmt = $mysqli->prepare("SELECT id, user_id, number_plate, color FROM car_plates");
+        $stmt->bind_result($id_from_db, $user_id_from_db, $number_plate_from_db, $color_from_db);
+        $stmt->execute();
+        //iga rea kohta, mis on andmebaasis, teeme midagi 
+        while($stmt->fetch()){
+            //saime andmed kätte
+            echo($number_plate_from_db);
+            
+            //? kuidas saada massiivi
+            
+        }
+        $stmt->close();
+        $mysqli->close();
+    }
+    
  ?>
